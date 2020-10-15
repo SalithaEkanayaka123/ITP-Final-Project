@@ -147,7 +147,8 @@ public class DBHelper {
             e.printStackTrace();
         }
     }
-  
+
+    
     //Create a Method to select all the records from the menu table
   ResultSet rs;
     public  ResultSet SelectMenu()
@@ -1243,7 +1244,7 @@ public class DBHelper {
         return rs;
     }
     
-       //Room Management - Select room details method - Temporary method. - Sallithas version.
+    //Room Management - Select room details method - Temporary method. - Sallithas version.
     public  ResultSet SelectRoomDetails()
     {
         try{
@@ -1324,7 +1325,7 @@ public class DBHelper {
     
     //----------------------------------------Taneesha ----------------------------------------------------
      public static void addRoom(String type,int floor_no,String category,String status,String package_name,String phone_no,int max_adults,int max_childrens,String des){
-    
+         //Create SQL type String
          type = " ' "+ type +" ' ";
          category = " ' "+ category +" ' ";
          status = " ' "+ status +" ' ";
@@ -1333,7 +1334,7 @@ public class DBHelper {
       
          des = " ' "+ des +" ' ";
          
-          //SQL - Adding Menus to the Database
+         //SQL - Adding room details to the Database
         String sql = "INSERT INTO  " + TABLE_Room +  " ( " + room_type +", " + Room.floor_no +" , " + Room.room_category +", " + room_status +", " + room_package +", " + room_phoneno +" , " + room_adults +", " + room_childrens +", " + room_description +")  VALUES (  " + type + ",  "  + floor_no + ",  "  + category + ",  "  + status + ",  "  + package_name + ",  "  + phone_no + ",  "  + max_adults + ",  "  + max_childrens + ",  "  + des + " )" ;
        //String sql = "insert into room (Type,Floor_No,Category,Status,Package_name,Phone_No,Max_Adults,MaxChildren,Description) values('er',2,'lkj','uyui','hjk','op',4,7,'kjhkj')";
        
@@ -1352,6 +1353,7 @@ public class DBHelper {
         
     }
     
+     //Add package
     public static void addPackage(String name,double price,double discount){
         //Create SQL type String 
         name = " ' "+ name +" ' ";
@@ -1554,7 +1556,7 @@ public class DBHelper {
    
        try{
         
-            //String sql = "SELECT c.roomcid, c.roomcustomer_name, b.roombid FROM " + "customer c " + " , "+ "booking b "  + " WHERE c.roomcid = b.roombooking_cID"; //Customer table and Booking table s
+            //Creating the query 
             String sql = "select b.BID, c.CID, c.CName\n" +
                          "from booking b, customer c \n" +
                          "where b.CID = c.CID ";
@@ -1579,6 +1581,7 @@ public class DBHelper {
             " FROM " + FROMNew +
             " WHERE "+ WHERENEW;
            //Preparing.
+           //Execute queries 
            PreparedStatement ps =  con.prepareStatement(sql);
            ResultSet rs = ps.executeQuery();
            return rs;
@@ -1593,7 +1596,7 @@ public class DBHelper {
     //Updating the faclity table 
     public static boolean updateFacilityTable(int id,String name){
         
-        //String Formatting
+        //Create SQL type String
         name = " ' "+ name +" ' ";
         //Creating the query 
         String sql = "UPDATE " + TABLE_Facility + " SET " + room_facility_name +" = " + name + " WHERE " + fid + " = " + id;
@@ -1638,7 +1641,7 @@ public class DBHelper {
     //updating the Room table
     public static boolean updateRoomDetails(int id, String type,int floorno,String category,String status,String package_name,String phone_no,int maxAdults,int maxChildrens,String des){
         
-        //String Formatting
+        //Create SQL type String
          type = " ' "+ type +" ' ";
          category = " ' "+ category +" ' ";
          status = " ' "+ status +" ' ";
@@ -1677,12 +1680,13 @@ public class DBHelper {
     
     public static boolean deleteFacilityDetails(int id,String name){
     
-         //String Formatting
+         //Create SQL type String
         name = " ' "+ name +" ' ";
         
         //creating query
         String sql = " DELETE FROM " + TABLE_Facility + " WHERE " + fid + " = " + id; 
- 
+        
+        //Execute queries 
          try{
              
             PreparedStatement Pstate = con.prepareStatement(sql);
@@ -1700,7 +1704,7 @@ public class DBHelper {
     
     public static boolean deleteRoomDetails(int id, String type,int floorno,String category,String status,String package_name,String phone_no,int maxAdults,int maxChildrens,String des){
     
-        //String Formatting
+        //Create SQL type String
          type = " ' "+ type +" ' ";
          category = " ' "+ category +" ' ";
          status = " ' "+ status +" ' ";
@@ -1710,7 +1714,7 @@ public class DBHelper {
          
          //creating query
          String sql = " DELETE FROM " + TABLE_Room + " WHERE " + rid + " = " + id; 
-    
+         //Execute queries 
          try{
              
             PreparedStatement Pstate = con.prepareStatement(sql);
@@ -1725,16 +1729,15 @@ public class DBHelper {
     
     
     //delete package details
-    
     public static boolean deletePackageDetails(int id,String name,double price,double discount){
     
-        //String Formatting
+        //Create SQL type String
         name = " ' "+ name +" ' ";
         
         //creating query
          String sql = " DELETE FROM " + TABLE_Package + " WHERE " + pid + " = " + id; 
-         
-         try{
+        //Execute queries 
+        try{
              
             PreparedStatement Pstate = con.prepareStatement(sql);
             Pstate.execute();
@@ -1745,26 +1748,31 @@ public class DBHelper {
         } 
          return false;
     
-    
+  
     }
     
-    //-------------------------------Reports---------------------------------------
+    //-------------------------------ROOM Reports---------------------------------------
     
     //PACKAGE REPORT
    public static void genaratePackageReport()throws JRException{
-    
+        //set location 
         JasperDesign jdesign = JRXmlLoader.load("src\\Reports\\RoomManagment\\packageNewVersion_A4.jrxml");
+        //calling the jasper Viewer
         JasperReport jreport = JasperCompileManager.compileReport(jdesign);
         JasperPrint jprint = JasperFillManager.fillReport(jreport, null , con);
+        //view report and when click clase not prevent close the pannel
         JasperViewer.viewReport(jprint,false);
         
    }
     
    //ROOM REPORT
     public static void genarateRoomReport() throws JRException{
+        //set location 
         JasperDesign jdesign = JRXmlLoader.load("src\\Reports\\RoomManagment\\RoomNewVersion.jrxml");
+        //calling the jasper Viewer
         JasperReport jreport = JasperCompileManager.compileReport(jdesign);
         JasperPrint jprint = JasperFillManager.fillReport(jreport, null , con);
+        //view report and when click clase not prevent close the pannel
         JasperViewer.viewReport(jprint, false);
     
     }
@@ -1776,11 +1784,15 @@ public class DBHelper {
         JasperPrint jprint = JasperFillManager.fillReport(jreport, null , con);
         JasperViewer.viewReport(jprint);*/
        
+       //set location 
        JasperDesign jdesign = JRXmlLoader.load("src\\Reports\\RoomManagment\\newIRequest_A4.jrxml");
+       //Passing the parameters to the jasper report
        HashMap map  = new HashMap();
        map.put("ID", id); 
+       //calling the jasper Viewer
        JasperReport jreport = JasperCompileManager.compileReport(jdesign);
        JasperPrint jprint = JasperFillManager.fillReport(jreport, map , con);
+       //view report and when click clase not prevent close the pannel
        JasperViewer.viewReport(jprint , false);
        
     }
@@ -2552,6 +2564,147 @@ public class DBHelper {
         }
         return rs;
     }
+   
+   public ResultSet CustomerIncome(String Year, String Month) {
+         try{
+            String date = Year+"-"+Month+"-%";
+            
+            //System.out.println(date);
+             date = " '" + date + "' ";
+            //getting total customer income price from the database
+            String sql = "select" + " sum(TotalAmount) AS totalAmount " +
+                         " from " + " customertransaction " +
+                          " where " + " dateTime LIKE " + date;
+                         //" order by " + " dateTime ";
+        
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery(); 
+            return rs;
+            } catch (SQLException e) {
+                System.out.println("Some thing wrong with reading tables - Internal error customer total income query");
+            }
+        return rs;     
+    }
+
+    public ResultSet SupplierOutcome(String Year, String Month) {
+        try{
+            String date =  Year+"-"+Month+"-%";
+            date = " '" + date + "' ";
+            //getting total customer income price from the database
+            String sql = " select " + " sum(TotalAmount) AS totalAmount " +
+                         " from " + "  companytransaction " +
+                         " where " + "  dateTime like " + date ;
+                         //" order by dateTime ";
+        
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery(); 
+            return rs;
+            } catch (SQLException e) {
+            System.out.println("Some thing wrong with reading tables - Internal error supplier total outcome query");
+            }
+        return rs;
+    }
+
+    public ResultSet EmployeeSalaryOutcome(String Year, String Month) {
+        try{
+            //String date = Year+"-"+Month+"-%";
+            Year = " '" + Year + "' ";
+            Month = " '" + Month + "' ";
+            //getting total customer income price from the database
+            String sql = " select " + " sum(netsalary) AS totalAmount " +
+                         " from " + "  salary " +
+                         " where " + " year = " + Year + " and month = " + Month ;
+                         //" order by month ";
+        
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery(); 
+            return rs;
+            } catch (SQLException e) {
+            System.out.println("Some thing wrong with reading tables - Internal error supplier total outcome query");
+            }
+        return rs;
+    }
+    
+    public static void InsertMonthlyDetail(String sql) throws SQLException {
+        if(con == null){
+           DbClass.Database();
+        }
+        con.createStatement().executeUpdate(sql);
+    }
+    
+     public  ResultSet SelectMonthTransactionDetails()
+   {
+        try{
+            String sql =  " SELECT " + "*" +
+                           " FROM " + " monthlytransaction " ;
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            //Add the rs to the table
+            return rs;
+        } catch (SQLException e) {
+            System.out.println("Some thing wrong with reading tables - Internal error monthly transaction table");
+        }
+        return rs;
+    }
+     
+     public static void generateTransactionReportMonth(String TID) throws JRException {
+        //Calling the method to open the report.
+        JasperDesign jdesign = JRXmlLoader.load("src\\TransactionReport\\monthlyReport.jrxml"); 
+        
+        //convert to string into int
+        int Tid=Integer.parseInt(TID);  
+        
+        //Creating a HashMap for pass the parameters 
+        HashMap map = new HashMap();
+        map.put("tID", Tid);
+        
+        //Calling the Jasper viewer.
+        JasperReport jreport = JasperCompileManager.compileReport(jdesign);
+        JasperPrint jprint = JasperFillManager.fillReport(jreport, map , con);
+        //JasperViewer jv = new JasperViewer(jprint, false);
+        JasperViewer.viewReport(jprint, false);
+    }
+     
+     public static void generateSupplierTransactionReport(String SID) throws JRException {
+        //Calling the method to open the report.
+        JasperDesign jdesign = JRXmlLoader.load("src\\TransactionReport\\SupplierTR.jrxml"); 
+        
+        //convert to string into int
+        int Sid=Integer.parseInt(SID);
+        //System.out.println(Sid);
+        
+        //Creating a HashMap for pass the parameters 
+        HashMap map = new HashMap();
+        map.put("sID", Sid);
+        //map.put("subReport","src/TransactionReport/GetSupplierTotalAmount.jrxml" );
+        
+        //Calling the Jasper viewer.
+        JasperReport jreport = JasperCompileManager.compileReport(jdesign);
+        JasperPrint jprint = JasperFillManager.fillReport(jreport, map , con);
+        //JasperViewer jv = new JasperViewer(jprint, false);
+        JasperViewer.viewReport(jprint, false);
+    }
+     
+    public static void generateCustomerTransactionReport(String CID) throws JRException {
+        //Calling the method to open the report.
+        JasperDesign jdesign = JRXmlLoader.load("src\\TransactionReport\\new.jrxml"); 
+        
+        //convert to string into int
+        int Cid=Integer.parseInt(CID);
+        //System.out.println(Sid);
+        
+        //Creating a HashMap for pass the parameters 
+        HashMap map = new HashMap();
+        map.put("cID", Cid);
+        //map.put("subReport","src/TransactionReport/GetSupplierTotalAmount.jrxml" );
+        
+        //Calling the Jasper viewer.
+        JasperReport jreport = JasperCompileManager.compileReport(jdesign);
+        JasperPrint jprint = JasperFillManager.fillReport(jreport, map , con);
+        //JasperViewer jv = new JasperViewer(jprint, false);
+        JasperViewer.viewReport(jprint, false);
+    }
+
     
    
    //-----------------------------------------------------------------------||Menakas DB Methods||-------------------------------------------------------
